@@ -1,10 +1,5 @@
 #include <stdint.h>
-
-/*
- *	config.h needs to come first
- */
 #include "config.h"
-
 #include "fsl_spi_master_driver.h"
 #include "fsl_port_hal.h"
 
@@ -13,13 +8,13 @@
 #include "warp.h"
 #include "devSSD1331.h"
 
-volatile uint8_t	inBuffer[1];
-volatile uint8_t	payloadBytes[1];
+volatile uint8_t	inBuffer[32];
+volatile uint8_t	payloadBytes[32];
 
 
 /*
  *	Override Warp firmware's use of these pins and define new aliases.
- */
+ 
 enum
 {
 	kSSD1331PinMOSI		= GPIO_MAKE_PIN(HW_GPIOA, 8),
@@ -27,7 +22,7 @@ enum
 	kSSD1331PinCSn		= GPIO_MAKE_PIN(HW_GPIOB, 13),
 	kSSD1331PinDC		= GPIO_MAKE_PIN(HW_GPIOA, 12),
 	kSSD1331PinRST		= GPIO_MAKE_PIN(HW_GPIOB, 0),
-};
+};*/
 
 static int
 writeCommand(uint8_t commandByte)
@@ -77,7 +72,7 @@ devSSD1331init(void)
 	PORT_HAL_SetMuxMode(PORTA_BASE, 8u, kPortMuxAlt3);
 	PORT_HAL_SetMuxMode(PORTA_BASE, 9u, kPortMuxAlt3);
 
-	enableSPIpins();
+	warpEnableSPIpins();
 
 	/*
 	 *	Override Warp firmware's use of these pins.
@@ -131,7 +126,7 @@ devSSD1331init(void)
 	writeCommand(kSSD1331CommandVCOMH);		// 0xBE
 	writeCommand(0x3E);
 	writeCommand(kSSD1331CommandMASTERCURRENT);	// 0x87
-	writeCommand(0x06);
+	writeCommand(0x0F);
 	writeCommand(kSSD1331CommandCONTRASTA);		// 0x81
 	writeCommand(0x91);
 	writeCommand(kSSD1331CommandCONTRASTB);		// 0x82
@@ -139,12 +134,14 @@ devSSD1331init(void)
 	writeCommand(kSSD1331CommandCONTRASTC);		// 0x83
 	writeCommand(0x7D);
 	writeCommand(kSSD1331CommandDISPLAYON);		// Turn on oled panel
+	SEGGER_RTT_WriteString(0, "\r\n\tDone with initialization sequence...\n");
 
 	/*
 	 *	To use fill commands, you will have to issue a command to the display to enable them. See the manual.
 	 */
 	writeCommand(kSSD1331CommandFILL);
 	writeCommand(0x01);
+	SEGGER_RTT_WriteString(0, "\r\n\tDone with enabling fill...\n");
 
 	/*
 	 *	Clear Screen
@@ -154,13 +151,44 @@ devSSD1331init(void)
 	writeCommand(0x00);
 	writeCommand(0x5F);
 	writeCommand(0x3F);
+	SEGGER_RTT_WriteString(0, "\r\n\tDone with screen clear...\n");
 
 
 
 	/*
-	 *	Any post-initialization drawing commands go here.
+	 *	Read the manual for the SSD1331 (SSD1331_1.2.pdf) to figure
+	 *	out how to fill the entire screen with the brightest shade
+	 *	of green.
 	 */
-	//...
+	// enter the draw rectangle mode 
+	writeCommand(0x22);
+	// set the starting column 
+	writeCommand(0x00);
+	// set the starting row 
+	writeCommand(0x00);
+	//set the end column
+	writeCommand(0x5F);
+	//set the end row
+	writeCommand(0x3F);
+	//set colour A line
+	writeCommand(0x00);
+	//set colour B line
+	writeCommand(0x3F);
+	//set colour C line
+	writeCommand(0x00);
+	//set colour A line
+        writeCommand(0x00);
+        //set colour B line
+        writeCommand(0x3F);
+        //set colour C line
+        writeCommand(0x00);
+
+	
+
+
+
+
+	SEGGER_RTT_WriteString(0, "\r\n\tDone with draw rectangle...\n");
 
 
 

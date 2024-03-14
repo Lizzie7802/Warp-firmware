@@ -1,0 +1,10 @@
+want to classify the breathing rate 
+
+the breathing rate is how many times your chest rises and falls over minute. 
+
+count the number of times the acceleration graph crosses 0 then divide by 2
+or could count the number of peaks
+
+Display a number on the OLED which is how many breaths per minute 
+
+need to work out how to read reading for 10 seconds - need to do a while loop with current time - start time and then loop while it is less than 10 seconds. 
