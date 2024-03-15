@@ -96,6 +96,9 @@
 /* add the algorithm to measure breathing rate */
 #include "breathing_rate.h"
 
+/* added to measure number of sit ups*/
+#include "sit_up_counter.h"
+
 #if (WARP_BUILD_ENABLE_DEVADXL362)
 	volatile WarpSPIDeviceState			deviceADXL362State;
 #endif
@@ -340,6 +343,7 @@ clockManagerCallbackRoutine(clock_notify_struct_t *  notify, void *  callbackDat
 /*
  *	Override the RTC IRQ handler
  */
+/*
 void
 RTC_IRQHandler(void)
 {
@@ -348,16 +352,17 @@ RTC_IRQHandler(void)
 		RTC_DRV_SetAlarmIntCmd(0, false);
 	}
 }
-
+*/
 /*
  *	Override the RTC Second IRQ handler
  */
+/*
 void
 RTC_Seconds_IRQHandler(void)
 {
 	gWarpSleeptimeSeconds++;
 }
-
+*/
 /*
  *	LLW_IRQHandler override. Since FRDM_KL03Z48M is not defined,
  *	according to power_manager_demo.c, what we need is LLW_IRQHandler.
@@ -371,32 +376,35 @@ RTC_Seconds_IRQHandler(void)
  *	not LLW_IRQHandler. See power_manager_demo.c, circa line 216, if
  *	you want to find out more about this dicsussion.
  */
+/*
 void
 LLWU_IRQHandler(void)
 {
 	/*
 	 *	BOARD_* defines are defined in warp.h
-	 */
+	 *//*
 	LLWU_HAL_ClearExternalPinWakeupFlag(LLWU_BASE, (llwu_wakeup_pin_t)BOARD_SW_LLWU_EXT_PIN);
 }
-
+*/
 /*
  *	IRQ handler for the interrupt from RTC, which we wire up
  *	to PTA0/IRQ0/LLWU_P7 in Glaux. BOARD_SW_LLWU_IRQ_HANDLER
  *	is a synonym for PORTA_IRQHandler.
  */
+/*
 void
 BOARD_SW_LLWU_IRQ_HANDLER(void)
 {
 	/*
 	 *	BOARD_* defines are defined in warp.h
-	 */
+	 *//*
 	PORT_HAL_ClearPortIntFlag(BOARD_SW_LLWU_BASE);
 }
 
 /*
  *	Power manager user callback
  */
+
 power_manager_error_code_t
 callback0(power_manager_notify_struct_t *  notify, power_manager_callback_data_t *  dataPtr)
 {
@@ -433,16 +441,16 @@ sleepUntilReset(void)
 		GPIO_DRV_SetPinOutput(kWarpPinSI4705_nRST);
 #endif
 
-		warpLowPowerSecondsSleep(1, false /* forceAllPinsIntoLowPowerState */);
+		warpLowPowerSecondsSleep(1, false );
 
 #if (WARP_BUILD_ENABLE_DEVSI4705)
 		GPIO_DRV_ClearPinOutput(kWarpPinSI4705_nRST);
 #endif
 
-		warpLowPowerSecondsSleep(60, true /* forceAllPinsIntoLowPowerState */);
+		warpLowPowerSecondsSleep(60, true );
 	}
 }
-
+/*
 
 void
 enableLPUARTpins(void)
@@ -450,6 +458,7 @@ enableLPUARTpins(void)
 	/*
 	 *	Enable UART CLOCK
 	 */
+/*
 	CLOCK_SYS_EnableLpuartClock(0);
 
 	/*
@@ -465,6 +474,7 @@ enableLPUARTpins(void)
 	 *		PTA6/kWarpPinSPI_MISO_UART_RTS for UART RTS
 	 *		PTA7/kWarpPinSPI_MOSI_UART_CTS for UART CTS
 	 */
+/*
 	PORT_HAL_SetMuxMode(PORTB_BASE, 3, kPortMuxAlt3);
 	PORT_HAL_SetMuxMode(PORTB_BASE, 4, kPortMuxAlt3);
 
@@ -477,6 +487,7 @@ enableLPUARTpins(void)
 	/*
 	 *	Initialize LPUART0. See KSDK13APIRM.pdf section 40.4.3, page 1353
 	 */
+/*
 	lpuartUserConfig.baudRate = gWarpUartBaudRateBps;
 	lpuartUserConfig.parityMode = kLpuartParityDisabled;
 	lpuartUserConfig.stopBitCount = kLpuartOneStopBit;
@@ -486,13 +497,15 @@ enableLPUARTpins(void)
 	LPUART_DRV_Init(0,(lpuart_state_t *)&lpuartState,(lpuart_user_config_t *)&lpuartUserConfig);
 }
 
-
+*/
+/*
 void
 disableLPUARTpins(void)
 {
 	/*
 	 *	LPUART deinit
 	 */
+/*
 	LPUART_DRV_Deinit(0);
 
 	/*
@@ -506,12 +519,14 @@ disableLPUARTpins(void)
 	 *		PTA6/kWarpPinSPI_MISO_UART_RTS for UART RTS
 	 *		PTA7/kWarpPinSPI_MOSI_UART_CTS for UART CTS
 	 */
+/*
 	PORT_HAL_SetMuxMode(PORTB_BASE, 3, kPortPinDisabled);
 	PORT_HAL_SetMuxMode(PORTB_BASE, 4, kPortPinDisabled);
 
 	/*
 	 * We don't use the HW flow control and that messes with the SPI any way
 	 */
+/*
 	PORT_HAL_SetMuxMode(PORTA_BASE, 6, kPortMuxAsGpio);
 	PORT_HAL_SetMuxMode(PORTA_BASE, 7, kPortMuxAsGpio);
 
@@ -521,11 +536,12 @@ disableLPUARTpins(void)
 	/*
 	 *	Disable LPUART CLOCK
 	 */
+/*
 	CLOCK_SYS_DisableLpuartClock(0);
 }
+*/
 
-
-
+/*
 WarpStatus
 sendBytesToUART(uint8_t *  bytes, size_t nbytes)
 {
@@ -539,6 +555,7 @@ sendBytesToUART(uint8_t *  bytes, size_t nbytes)
 
 	return kWarpStatusOK;
 }
+*/
 
 
 
@@ -602,7 +619,7 @@ warpDisableSPIpins(void)
 	CLOCK_SYS_DisableSpiClock(0);
 }
 
-
+/*
 
 void
 warpDeasserAllSPIchipSelects(void)
@@ -622,7 +639,7 @@ warpDeasserAllSPIchipSelects(void)
 	 *		On Glaux
 									PTB2/kGlauxPinFlash_SPI_nCS for GPIO
 	 */
-	PORT_HAL_SetMuxMode(PORTA_BASE, 12, kPortMuxAsGpio);
+/*	PORT_HAL_SetMuxMode(PORTA_BASE, 12, kPortMuxAsGpio);
 	PORT_HAL_SetMuxMode(PORTA_BASE, 9, kPortMuxAsGpio);
 	PORT_HAL_SetMuxMode(PORTA_BASE, 8, kPortMuxAsGpio);
 	PORT_HAL_SetMuxMode(PORTB_BASE, 1, kPortMuxAsGpio);
@@ -652,7 +669,8 @@ warpDeasserAllSPIchipSelects(void)
 }
 
 
-
+*/
+/*
 void
 debugPrintSPIsinkBuffer(void)
 {
@@ -664,7 +682,7 @@ debugPrintSPIsinkBuffer(void)
 }
 
 
-
+*/
 void
 warpEnableI2Cpins(void)
 {
@@ -2048,7 +2066,8 @@ initAS7262(	0x49	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsAS7262	);
 		 *	commands.
 		 */
 		gWarpExtraQuietMode = false;
-		measure_breathing_rate();
+
+		sit_up_counter();
 		
 		devSSD1331init(); /* this calls the function to initialise the OLED */
 		// now want to add the statements to print the register values of the INA219

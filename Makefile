@@ -95,6 +95,8 @@ frdmkl03:
 	cp src/boot/ksdk1.1.0/devSSD1331.*				build/ksdk1.1/work/demos/Warp/src/
 	cp src/boot/ksdk1.1.0/devINA219.*				build/ksdk1.1/work/demos/Warp/src/
 	cp src/boot/ksdk1.1.0/breathing_rate.*				build/ksdk1.1/work/demos/Warp/src/
+	cp src/boot/ksdk1.1.0/sit_up_counter.*				build/ksdk1.1/work/demos/Warp/src/
+	
 	cp src/boot/ksdk1.1.0/powermodes.c				build/ksdk1.1/work/demos/Warp/src/
 	cp src/boot/ksdk1.1.0/warp.h					build/ksdk1.1/work/demos/Warp/src/
 	cp src/boot/ksdk1.1.0/startup_MKL03Z4.S				build/ksdk1.1/work/platform/startup/MKL03Z4/gcc/startup_MKL03Z4.S
