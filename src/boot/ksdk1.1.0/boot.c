@@ -2074,11 +2074,10 @@ initAS7262(	0x49	/* i2cAddress */,	kWarpDefaultSupplyVoltageMillivoltsAS7262	);
                 
 
 		// now want to take 1000 readings
-		// this measures all 4 registers in the order: Shunt voltage, bus voltage, power, current
-		/*
-		for (int i=0; i<1000; i++){
+		// this measures all 4 registers in the order: Shunt voltage, bus voltage, power, curr
+		/*for (int i=0; i<1000; i++){
 			warpPrint("\n");
-			printSensorDataINA219(0);
+			printSensorDataMMA8451Q(0);
 		}*/
 
 		printBootSplash(gWarpCurrentSupplyVoltage, menuRegisterAddress, &powerManagerCallbackStructure);
